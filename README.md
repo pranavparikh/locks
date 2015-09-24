@@ -31,16 +31,15 @@ Note: this is a work in progress
       active: 99 + 1 local claim
       Note: client1 has not yet claimed the VM because it's taking a while to set up a tunnel or boot up the test,
             but we don't expire its claim for another minute and 55 seconds or so.
-
-  - Continuously ping provider for VM usage information. 
-  - Keep own representation of available counts
-  - Handle worker traffic control requests:
-    - If VMs are available, grant them to a worker and increase our local count
-    - If VMs are not available, tell the requesting worker to wait
-    - New worker VM requests get queued and have to wait until a new ping comes in indicating room. 
-    - A VM is only handed out after the NEXT usage ping's data comes in (hopefully allows for queueing of previous pings to take effect)
-
-  We fetch pings, and then actions taken since the last ping (like handing out of VMs) increment local counts. We can thus only
-  hand out a new VM after a ping indicates our usage has *fallen*. This prevents us from accidentally overprovisioning the virtual
-  machines.
 ```
+
+- Continuously ping provider for VM usage information. 
+- Keep own representation of available counts
+- Handle worker traffic control requests:
+  - If VMs are available, grant them to a worker and increase our local claim count.
+  - If VMs are not available, tell the requesting worker nothing is available. The worker will ping again later.
+  - New worker VM requests get queued and have to wait until a new ping comes in indicating room. 
+  - A VM is only handed out after the NEXT usage ping's data comes in (hopefully allows for queueing of previous pings to take effect)
+
+- We fetch pings, and then actions taken since the last ping (like handing out of VMs) increment local counts. We can thus only
+  hand out a new VM after a ping indicates our usage has *fallen*. This is done by expiring local counts after some reasonable amount of time. This prevents us from accidentally overprovisioning the virtual machines.
