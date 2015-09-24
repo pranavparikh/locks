@@ -81,12 +81,15 @@ var fail = function (error) {
 };
 
 module.exports = {
-  initialize: function () {
+  initialize: function (callback) {
     provider.initialize(function (error) {
       if (error) {
         throw new Error("Failed to initialize provider connection: " + error);
       }
       monitor();
+      if (callback) {
+        callback();
+      }
     });
   },
 

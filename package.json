@@ -17,6 +17,7 @@
     }
   ],
   "dependencies": {
+    "express": "^4.13.3",
     "request": "^2.63.0"
   },
   "license": "MIT",
