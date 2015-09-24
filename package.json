@@ -1,6 +1,6 @@
 {
   "name": "testarmada-locks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "VM provisioning for automated testing",
   "main": "main.js",
   "scripts": {
