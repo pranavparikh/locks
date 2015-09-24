@@ -1,0 +1,27 @@
+{
+  "name": "testarmada-locks",
+  "version": "1.0.0",
+  "description": "VM provisioning for automated testing",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TestArmada/locks.git"
+  },
+  "contributors": [
+    {
+      "name": "Maciej Adwent",
+      "url": "http://github.com/Maciek416"
+    }
+  ],
+  "dependencies": {
+    "request": "^2.63.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TestArmada/locks/issues"
+  },
+  "homepage": "https://github.com/TestArmada/locks#readme"
+}
