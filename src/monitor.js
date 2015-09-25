@@ -6,10 +6,11 @@ var claims = [];
 var concurrency = undefined;
 
 var DELAY = 5000;
+var ERROR_DELAY = 10000;
 
-// Use a short expiry time for test purposes
-// var EXPIRY_TIME = 1000 * 60 * 2;
-var EXPIRY_TIME = 1000 * 15;
+// Expire claims after 30 seconds, assuming we don't learn about external
+// release of claim in that time window.
+var EXPIRY_TIME = 1000 * 30;
 
 var getTotalClaims = function () {
   return lastRemoteClaims + claims.length;
@@ -51,7 +52,10 @@ var monitor = function () {
     //   queued   - total number of VMs getting ready to run tests
     //
     if (error) {
-      return fail(error);
+      showError(error);
+      console.log("Waiting " + ERROR_DELAY + "ms before polling again...");
+      setTimeout(monitor, ERROR_DELAY);
+      return;
     }
 
     if (typeof concurrency === "undefined") {
@@ -75,9 +79,11 @@ var monitor = function () {
 };
 
 // TODO: sensible error handling -- this will kill the monitor on any error
-var fail = function (error) {
+var showError = function (error) {
   console.log("Error: ", error);
-  process.exit(1);
+  if (error.stack) {
+    console.log("Stack trace:", error.stack);
+  }
 };
 
 module.exports = {

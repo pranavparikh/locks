@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var port = 3000;
+var PORT = 3000;
 
 var monitor = require("./monitor");
 
