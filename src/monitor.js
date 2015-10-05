@@ -111,5 +111,6 @@ module.exports = {
     });
   },
 
-  claimVM: claimVM
+  claimVM: claimVM,
+  releaseVM: releaseVM
 };
