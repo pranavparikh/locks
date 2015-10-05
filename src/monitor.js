@@ -18,13 +18,25 @@ var getTotalClaims = function () {
 
 var claimVM = function () {
   if (getTotalClaims() < concurrency) {
-    claims.push({
+    var claim = {
+      token: "vm" + Math.round(100000 + (Math.random() * 99999999)).toString(16),
       timestamp: Date.now()
-    });
-    return true;
+    };
+    claims.push(claim);
+    return claim;
   } else {
     return false;
   }
+};
+
+var releaseVM = function (token) {
+  claims = claims.filter(function (claim) {
+    if (claim.token === token) {
+      console.log("Early-releasing claim by token " + token + " from " + claim.timestamp + "  (now = " + now + ")");
+      return false;
+    }
+    return true;
+  });
 };
 
 var expireClaims = function () {

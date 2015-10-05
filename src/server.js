@@ -21,12 +21,13 @@ process.stdin.on("data", function (key) {
   } 
 });
 
-app.get("/claim", function (req, res) {
-  if (monitor.claimVM()) {
+app.post("/claim", function (req, res) {
+  var claim = monitor.claimVM();
+  if (claim) {
     console.log("<-- claim accepted from " + req.ip);
     res.send({
       accepted: true,
-      token: null,
+      token: claim.token,
       message: "Claim accepted"
     });
   } else {
@@ -36,6 +37,11 @@ app.get("/claim", function (req, res) {
       message: "Claim rejected. No VMs available."
     });
   }
+});
+
+app.post("/release", function (req, res) {
+  console.log("<-- release for token " + req.query.token + " received from " + req.ip);
+  monitor.releaseVM(req.query.token);
 });
 
 monitor.initialize(function () {
