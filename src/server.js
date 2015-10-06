@@ -1,6 +1,10 @@
 var express = require("express");
+var bodyParser = require("body-parser");
 var app = express();
 var PORT = 3000;
+
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var monitor = require("./monitor");
 
@@ -18,7 +22,7 @@ process.stdin.on("data", function (key) {
     } else {
       console.log("(claim rejected: too many claims right now)");
     }
-  } 
+  }
 });
 
 app.post("/claim", function (req, res) {
@@ -40,7 +44,8 @@ app.post("/claim", function (req, res) {
 });
 
 app.post("/release", function (req, res) {
-  console.log("<-- release for token " + req.query.token + " received from " + req.ip);
+  console.log("req.body:", req.body, typeof req.body);
+  console.log("<-- releasing token " + req.body.token + " received from " + req.ip);
   monitor.releaseVM(req.query.token);
 });
 
