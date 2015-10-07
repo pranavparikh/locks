@@ -5,7 +5,7 @@ var lastRemoteClaims = undefined;
 var claims = [];
 var concurrency = undefined;
 var status;
-var history;
+var history = [];
 
 var HISTORY_MAX = 100;
 
