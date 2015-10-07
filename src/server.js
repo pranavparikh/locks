@@ -8,23 +8,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var monitor = require("./monitor");
 
-// process.stdin.resume(); 
-// process.stdin.setEncoding("utf8"); 
-// process.stdin.setRawMode(true); 
-// process.stdin.on("data", function (key) { 
-//   if (key === "\3") { 
-//     console.log("\nShutting down server ..."); 
-//     process.exit(); 
-//   } else if (key === "c") {
-//     console.log("\nGenerating a synthetic claim...");
-//     if (monitor.claimVM()) {
-//       console.log("(claim accepted)");
-//     } else {
-//       console.log("(claim rejected: too many claims right now)");
-//     }
-//   }
-// });
-
 app.post("/claim", function (req, res) {
   var claim = monitor.claimVM();
   if (claim) {
@@ -44,9 +27,24 @@ app.post("/claim", function (req, res) {
 });
 
 app.post("/release", function (req, res) {
-  console.log("req.body:", req.body, typeof req.body);
-  console.log("<-- releasing token " + req.body.token + " received from " + req.ip);
-  monitor.releaseVM(req.query.token);
+  if (req.body) {
+    var token = req.body.token;
+    if (monitor.releaseVM(token)) {
+      console.log("<-- releasing token " + token + " received from " + req.ip);
+    } else {
+      console.log("<-- ignoring token release request " + token + " received from " + req.ip + ", likely already cleaned up.");
+    }
+  } else {
+    console.log("<-- invalid token release request received from " + req.ip);
+  }
+});
+
+app.get("/status", function (req, res) {
+  res.send(monitor.getStatus());
+});
+
+app.get("/history", function (req, res) {
+  res.send(monitor.getHistory());
 });
 
 monitor.initialize(function () {

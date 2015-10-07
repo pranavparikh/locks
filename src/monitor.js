@@ -4,6 +4,10 @@ var provider = require("./providers/" + currentProvider);
 var lastRemoteClaims = undefined;
 var claims = [];
 var concurrency = undefined;
+var status;
+var history;
+
+var HISTORY_MAX = 100;
 
 var DELAY = 5000;
 var ERROR_DELAY = 10000;
@@ -30,20 +34,23 @@ var claimVM = function () {
 };
 
 var releaseVM = function (token) {
+  var didReleaseSomething = false;
   claims = claims.filter(function (claim) {
     if (claim.token === token) {
-      console.log("Early-releasing claim by token " + token + " from " + claim.timestamp + "  (now = " + now + ")");
+      didReleaseSomething = true;
+      console.log("Releasing claim (request): token " + token);
       return false;
     }
     return true;
   });
+  return didReleaseSomething;
 };
 
 var expireClaims = function () {
   var now = Date.now();
   claims = claims.filter(function (claim) {
     if (now - claim.timestamp > EXPIRY_TIME) {
-      console.log("Expiring claim from " + claim.timestamp + "  (now = " + now + ")");
+      console.log("Releasing claim (expired): token " + claim.token);
       return false;
     }
     return true;
@@ -75,6 +82,20 @@ var monitor = function () {
     }
 
     lastRemoteClaims = data.claimed;
+
+    status = {
+      timestamp: Date.now(),
+      localClaims: claims.length,
+      remoteActual: data.claimed,
+      remoteMax: concurrency,
+      likelyTotal: (claims.length + data.claimed)
+    };
+
+    history.push(status);
+
+    if (history.length > HISTORY_MAX) {
+      history.shift();
+    }
 
     console.log("    Local Claims: " + claims.length);
     console.log("   Remote Actual: " + data.claimed + " / " + concurrency);
@@ -112,5 +133,11 @@ module.exports = {
   },
 
   claimVM: claimVM,
-  releaseVM: releaseVM
+  releaseVM: releaseVM,
+  getStatus: function () {
+    return status;
+  },
+  getHistory: function () {
+    return history;
+  }
 };
