@@ -24,11 +24,11 @@ module.exports = function (ev) {
     }
 
     request(options, function (error, response, body) {
-      if (error) {
-        console.log("logging error:", error);
-      } else {
-        console.log("logging success. Response:", response, body);
-      }
+      // if (error) {
+      //   console.log("logging error:", error);
+      // } else {
+      //   console.log("logging success. Response:", response, body);
+      // }
     });
   }
 };
