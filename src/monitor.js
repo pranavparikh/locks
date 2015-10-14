@@ -1,5 +1,6 @@
 var currentProvider = "sauce";
 var provider = require("./providers/" + currentProvider);
+var log = require("./log");
 
 var lastRemoteClaims = undefined;
 var claims = [];
@@ -91,6 +92,12 @@ var monitor = function () {
       likelyTotal: (claims.length + data.claimed)
     };
 
+    log({
+      localClaims: status.localClaims,
+      remoteActual: status.remoteActual,
+      remoteMax: status.remoteMax,
+      likelyTotal: status.likelyTotal
+    });
     history.push(status);
 
     if (history.length > HISTORY_MAX) {

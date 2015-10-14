@@ -1,3 +1,7 @@
+var marge = require("marge");
+var path = require("path");
+marge.init(path.resolve("./locks.conf"));
+
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
