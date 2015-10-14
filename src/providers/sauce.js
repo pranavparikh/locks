@@ -9,6 +9,8 @@ var settings = {
 
 var concurrency;
 
+var SAUCE_REQUEST_TIMEOUT = 1000 * 10;
+
 // TODO: need a timeout option so we don't get into a zombie mode
 var getSauce = function (verb, callback) {
   var url;
@@ -22,7 +24,8 @@ var getSauce = function (verb, callback) {
     auth: {
       user: settings.username,
       pass: settings.accessKey
-    }
+    },
+    timeout: SAUCE_REQUEST_TIMEOUT
   }, function (error, response, body) {
     if (error) {
       callback(error);
