@@ -1,6 +1,7 @@
 var request = require("request");
 var argv = require("marge").argv;
 var path = require("path");
+var fs = require("fs");
 
 module.exports = function (ev) {
   if (argv.kibana_url) {
