@@ -75,17 +75,8 @@ module.exports = {
       if (error) {
         callback(error);
       } else {
-        // Try to get activity from the "subaccounts" structure. If sauce hasn't given us this, because
-        // this account doesn't have subaccounts, then grab from "totals" instead.
         if (data) {
-          if (data.subaccounts && data.subaccounts[settings.username]) {
-            callback(null, {
-              max: concurrency,
-              claimed: data.subaccounts[settings.username].all,
-              active: data.subaccounts[settings.username]["in progress"],
-              queued: data.subaccounts[settings.username].queued
-            });
-          } else if (data.totals) {
+          if (data.totals) {
             callback(null, {
               max: concurrency,
               claimed: data.totals.all,
@@ -93,7 +84,7 @@ module.exports = {
               queued: data.totals.queued
             });
           } else {
-            callback(new Error("Data from SauceLabs activity endpoint was invalid: no subaccount or totals field found."))
+            callback(new Error("Data from SauceLabs activity endpoint was invalid: no totals field found."))
           }
         } else {
           callback(new Error("Data from SauceLabs activity endpoint was invalid: data body is null or undefined."))
