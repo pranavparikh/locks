@@ -14,15 +14,18 @@
     {
       "name": "Maciej Adwent",
       "url": "http://github.com/Maciek416"
-    },{
+    },
+    {
       "name": "Dave Cadwallader",
       "url": "http://github.com/geekdave"
-    },
+    }
   ],
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
+    "lodash": "^4.6.1",
     "marge": "^1.0.1",
+    "node-statsd": "^0.1.1",
     "request": "^2.63.0"
   },
   "license": "MIT",

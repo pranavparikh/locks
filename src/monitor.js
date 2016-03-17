@@ -10,7 +10,7 @@ var history = [];
 
 var HISTORY_MAX = 100;
 
-var DELAY = 5000;
+var DELAY = 10000;
 var ERROR_DELAY = 10000;
 
 // Expire claims after 30 seconds, assuming we don't learn about external
@@ -92,7 +92,7 @@ var monitor = function () {
       likelyTotal: (claims.length + data.claimed)
     };
 
-    log({
+    log.log({
       localClaims: status.localClaims,
       remoteActual: status.remoteActual,
       remoteMax: status.remoteMax,

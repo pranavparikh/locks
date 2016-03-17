@@ -1,11 +1,14 @@
 var marge = require("marge");
 var path = require("path");
+var log = require("./log");
 marge.init(path.resolve("./locks.json"));
 
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var PORT = 4765;
+
+log.init();
 
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true }));
