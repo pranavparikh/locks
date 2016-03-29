@@ -30,18 +30,30 @@ var init = function () {
   }
 };
 
-var log = function (ev) {
+var sendStats = function (type, ev, namespace) {
   if (client) {
     _.each(ev, function (value, key) {
       // send metrics to statsd over UDP.  no error handling by design.
       // https://codeascraft.com/2011/02/15/measure-anything-measure-everything/
       // (see the `Why UDP?` section)
-      client.gauge(key, value);
+      if (namespace) {
+        key = namespace + "." + key;
+      }
+      client[type](key, value);
     });
   }
 };
 
+var gauge = function(ev, namespace) {
+  sendStats("gauge", ev, namespace);
+};
+
+var increment = function(ev, namespace) {
+  sendStats("increment", ev, namespace);
+};
+
 module.exports = {
   init: init,
-  log: log
+  gauge: gauge,
+  increment: increment
 };

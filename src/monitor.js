@@ -1,6 +1,7 @@
 var currentProvider = "sauce";
 var provider = require("./providers/" + currentProvider);
 var log = require("./log");
+var _ = require("lodash");
 
 var lastRemoteClaims = undefined;
 var claims = [];
@@ -10,7 +11,7 @@ var history = [];
 
 var HISTORY_MAX = 100;
 
-var DELAY = 10000;
+var DELAY = 5000;
 var ERROR_DELAY = 10000;
 
 // Expire claims after 30 seconds, assuming we don't learn about external
@@ -78,9 +79,9 @@ var monitor = function () {
       return;
     }
 
-    if (typeof concurrency === "undefined") {
-      concurrency = data.max
-    }
+    console.log(JSON.stringify(data));
+
+    concurrency = data.max;
 
     lastRemoteClaims = data.claimed;
 
@@ -92,12 +93,21 @@ var monitor = function () {
       likelyTotal: (claims.length + data.claimed)
     };
 
-    log.log({
+    var ev = {
       localClaims: status.localClaims,
       remoteActual: status.remoteActual,
       remoteMax: status.remoteMax,
       likelyTotal: status.likelyTotal
-    });
+    }
+
+    if (data.teams) {
+      _.each(data.teams, function(val, key) {
+        console.log("account." + key + " : " + val);
+        ev["account." + key] = val;
+      });
+    }
+
+    log.gauge(ev);
     history.push(status);
 
     if (history.length > HISTORY_MAX) {
