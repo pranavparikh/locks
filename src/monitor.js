@@ -78,9 +78,7 @@ var monitor = function () {
       setTimeout(monitor, ERROR_DELAY);
       return;
     }
-
-    console.log(JSON.stringify(data));
-
+    
     concurrency = data.max;
 
     lastRemoteClaims = data.claimed;
