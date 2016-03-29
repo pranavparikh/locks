@@ -1,4 +1,5 @@
 var request = require("request");
+var _ = require("lodash");
 
 var initialized = false;
 
@@ -76,12 +77,26 @@ module.exports = {
         callback(error);
       } else {
         if (data) {
+
+          var teams = {};
+          if (data.subaccounts) {
+            _.each(data.subaccounts, function(val, key) {
+              var countForTeam = val["in progress"];
+              if (countForTeam) {
+                teams[key] = countForTeam;
+              }
+            });
+          }
+
+          console.log(JSON.stringify(teams));
+
           if (data.totals) {
             callback(null, {
               max: concurrency,
               claimed: data.totals.all,
               active: data.totals["in progress"],
-              queued: data.totals.queued
+              queued: data.totals.queued,
+              teams: teams              
             });
           } else {
             callback(new Error("Data from SauceLabs activity endpoint was invalid: no totals field found."))
