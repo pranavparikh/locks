@@ -117,6 +117,9 @@ var monitor = function () {
     }
 
     console.log("    Local Claims: " + claims.length);
+    console.log("   Remote Queued: " + data.queued);
+    console.log("   Remote Active: " + data.active);
+
     console.log("   Remote Actual: " + data.claimed + " / " + concurrency);
     console.log("    Likely total: " + (claims.length + data.claimed) + " / " + concurrency);
 

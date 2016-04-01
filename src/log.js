@@ -39,6 +39,7 @@ var sendStats = function (type, ev, namespace) {
       if (namespace) {
         key = namespace + "." + key;
       }
+      console.log("[" + type + "] " + key + " : " + value);
       client[type](key, value);
     });
   }
