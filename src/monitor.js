@@ -78,7 +78,7 @@ var monitor = function () {
       setTimeout(monitor, ERROR_DELAY);
       return;
     }
-    
+
     concurrency = data.max;
 
     lastRemoteClaims = data.claimed;
@@ -88,6 +88,8 @@ var monitor = function () {
       localClaims: claims.length,
       remoteActual: data.claimed,
       remoteMax: concurrency,
+      remoteQueued: data.queued,
+      remoteActive: data.active,
       likelyTotal: (claims.length + data.claimed)
     };
 
@@ -95,8 +97,10 @@ var monitor = function () {
       localClaims: status.localClaims,
       remoteActual: status.remoteActual,
       remoteMax: status.remoteMax,
+      remoteQueued: status.remoteQueued,
+      remoteActive: status.remoteActive,
       likelyTotal: status.likelyTotal
-    }
+    };
 
     if (data.teams) {
       _.each(data.teams, function(val, key) {
