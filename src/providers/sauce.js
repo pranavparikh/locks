@@ -83,6 +83,7 @@ module.exports = {
             _.each(data.subaccounts, function(val, key) {
               var countForTeam = val["in progress"];
               if (countForTeam) {
+                key = key.replace(".", "_");
                 teams[key] = countForTeam;
               }
             });
