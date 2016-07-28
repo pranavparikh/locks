@@ -6,7 +6,7 @@ marge.init(path.resolve("./locks.json"));
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-var PORT = 4765;
+var PORT = process.env.PORT || 4765;
 
 log.init();
 
