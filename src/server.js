@@ -10,7 +10,7 @@ var PORT = 4765;
 
 log.init();
 
-app.use( bodyParser.json() );
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var monitor = require("./monitor");
@@ -43,6 +43,13 @@ app.post("/release", function (req, res) {
     }
   } else {
     console.log("<-- invalid token release request received from " + req.ip);
+  }
+});
+
+app.post("/timeout", function (req, res) {
+  if (req.body) {
+    var claimTimeout = req.body.timeout;
+    res.send(monitor.setClaimTimeout(claimTimeout));
   }
 });
 
