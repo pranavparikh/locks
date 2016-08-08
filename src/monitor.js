@@ -18,7 +18,7 @@ var lastRemoteClaims = undefined;
 var claims = [];
 var concurrency = undefined;
 var status;
-var localClaimsTimeout = EXPIRY_TIME;
+var localClaimsExpiry = EXPIRY_TIME;
 var history = [];
 
 var getTotalClaims = function () {
@@ -54,7 +54,7 @@ var releaseVM = function (token) {
 var expireClaims = function () {
   var now = Date.now();
   claims = claims.filter(function (claim) {
-    if (now - claim.timestamp > EXPIRY_TIME) {
+    if (now - claim.timestamp > localClaimsExpiry) {
       console.log("Releasing claim (expired): token " + claim.token);
       return false;
     }
@@ -94,7 +94,7 @@ var monitor = function () {
       remoteQueued: data.queued,
       remoteActive: data.active,
       likelyTotal: (claims.length + data.claimed),
-      localClaimsTimeout: localClaimsTimeout
+      localClaimsExpiry: localClaimsExpiry
     };
 
     var ev = {
@@ -167,7 +167,7 @@ module.exports = {
     return history;
   },
   setClaimTimeout: function (timeout) {
-    localClaimsTimeout = timeout;
-    console.log("localClaims timeout has been successfully set to", timeout, "ms");
+    localClaimsExpiry = timeout;
+    console.log("localClaims expiry has been successfully set to", timeout, "ms");
   }
 };
