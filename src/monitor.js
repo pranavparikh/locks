@@ -3,11 +3,7 @@ var provider = require("./providers/" + currentProvider);
 var log = require("./log");
 var _ = require("lodash");
 
-var lastRemoteClaims = undefined;
-var claims = [];
-var concurrency = undefined;
-var status;
-var history = [];
+
 
 var HISTORY_MAX = 100;
 
@@ -17,6 +13,13 @@ var ERROR_DELAY = 10000;
 // Expire claims after 30 seconds, assuming we don't learn about external
 // release of claim in that time window.
 var EXPIRY_TIME = 1000 * 30;
+
+var lastRemoteClaims = undefined;
+var claims = [];
+var concurrency = undefined;
+var status;
+var localClaimsTimeout = EXPIRY_TIME;
+var history = [];
 
 var getTotalClaims = function () {
   return lastRemoteClaims + claims.length;
@@ -90,7 +93,8 @@ var monitor = function () {
       remoteMax: concurrency,
       remoteQueued: data.queued,
       remoteActive: data.active,
-      likelyTotal: (claims.length + data.claimed)
+      likelyTotal: (claims.length + data.claimed),
+      localClaimsTimeout: localClaimsTimeout
     };
 
     var ev = {
@@ -103,7 +107,7 @@ var monitor = function () {
     };
 
     if (data.teams) {
-      _.each(data.teams, function(val, key) {
+      _.each(data.teams, function (val, key) {
         console.log("account." + key + " : " + val);
         ev["account." + key] = val;
       });
@@ -161,5 +165,9 @@ module.exports = {
   },
   getHistory: function () {
     return history;
+  },
+  setClaimTimeout: function (timeout) {
+    localClaimsTimeout = timeout;
+    console.log("localClaims timeout has been successfully set to", timeout, "ms");
   }
 };
