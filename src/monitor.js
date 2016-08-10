@@ -167,7 +167,12 @@ module.exports = {
     return history;
   },
   setClaimTimeout: function (timeout) {
-    localClaimsExpiry = timeout;
-    console.log("localClaims expiry has been successfully set to", timeout, "ms");
+    
+    if (_.isInteger(_.toNumber(timeout))) {
+      localClaimsExpiry = _.toNumber(timeout);
+      console.log("localClaims expiry has been successfully set to", timeout, "ms");
+    } else {
+      console.log("timeout needs to be an integer");
+    }
   }
 };
