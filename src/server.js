@@ -18,16 +18,14 @@ var monitor = require("./monitor");
 app.post("/claim", function (req, res) {
   var claim = monitor.claimVM();
   if (claim) {
-    console.log("<-- claim accepted from " + req.ip);
-    log.increment({accepted: 1});
+    log.increment("accepted");
     res.send({
       accepted: true,
       token: claim.token,
       message: "Claim accepted"
     });
   } else {
-    console.log("<-- claim rejected from " + req.ip);
-    log.increment({rejected: 1});
+    log.increment("rejected");
     res.send({
       accepted: false,
       message: "Claim rejected. No VMs available."
@@ -39,12 +37,12 @@ app.post("/release", function (req, res) {
   if (req.body) {
     var token = req.body.token;
     if (monitor.releaseVM(token)) {
-      console.log("<-- releasing token " + token + " received from " + req.ip);
+      log.increment("released");
     } else {
-      console.log("<-- ignoring token release request " + token + " received from " + req.ip + ", likely already cleaned up.");
+      log.increment("ignored");
     }
   } else {
-    console.log("<-- invalid token release request received from " + req.ip);
+    log.increment("invalid");
   }
 });
 
