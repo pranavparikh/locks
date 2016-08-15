@@ -19,7 +19,7 @@ app.post("/claim", function (req, res) {
   var claim = monitor.claimVM();
   if (claim) {
     console.log("<-- claim accepted from " + req.ip);
-    client.increment("accepted");
+    log.increment("accepted");
     res.send({
       accepted: true,
       token: claim.token,
@@ -27,7 +27,7 @@ app.post("/claim", function (req, res) {
     });
   } else {
     console.log("<-- claim rejected from " + req.ip);
-    client.increment("rejected");
+    log.increment("rejected");
     res.send({
       accepted: false,
       message: "Claim rejected. No VMs available."
