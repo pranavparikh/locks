@@ -23,6 +23,8 @@ var options = {
 
 var client;
 
+var counts = {};
+
 var init = function () {
 
   if (host) {
@@ -32,6 +34,9 @@ var init = function () {
 
 var sendStats = function (type, ev, namespace) {
   if (client) {
+    
+    ev = _.extend(ev, counts);
+    
     _.each(ev, function (value, key) {
       // send metrics to statsd over UDP.  no error handling by design.
       // https://codeascraft.com/2011/02/15/measure-anything-measure-everything/
@@ -42,6 +47,8 @@ var sendStats = function (type, ev, namespace) {
       console.log("[" + type + "] " + key + " : " + value);
       client[type](key, value);
     });
+    
+    counts = {};
   }
 };
 
@@ -49,8 +56,11 @@ var gauge = function(ev, namespace) {
   sendStats("gauge", ev, namespace);
 };
 
-var increment = function(ev, namespace) {
-  sendStats("increment", ev, namespace);
+var increment = function(name) {
+  if (!counts[name]) {
+    counts[name] = 0;
+  }
+  counts[name]++;
 };
 
 module.exports = {
