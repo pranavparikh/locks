@@ -97,23 +97,13 @@ var monitor = function () {
       localClaimsExpiry: localClaimsExpiry
     };
 
-    var ev = {
-      localClaims: status.localClaims,
-      remoteActual: status.remoteActual,
-      remoteMax: status.remoteMax,
-      remoteQueued: status.remoteQueued,
-      remoteActive: status.remoteActive,
-      likelyTotal: status.likelyTotal
-    };
-
     if (data.teams) {
       _.each(data.teams, function (val, key) {
-        console.log("account." + key + " : " + val);
-        ev["account." + key] = val;
+        console.log("activeByAccount" + key + " : " + val);
+        log.gauge("activeByAccount", val, ["account:" + key])
       });
     }
 
-    log.gauge(ev);
     history.push(status);
 
     if (history.length > HISTORY_MAX) {
@@ -126,6 +116,13 @@ var monitor = function () {
 
     console.log("   Remote Actual: " + data.claimed + " / " + concurrency);
     console.log("    Likely total: " + (claims.length + data.claimed) + " / " + concurrency);
+
+   log.gauge("localClaims", status.localClaims);
+   log.gauge("remoteActual", status.remoteActual);
+   log.gauge("remoteMax", status.remoteMax);
+   log.gauge("remoteQueued", status.remoteQueued);
+   log.gauge("remoteActive", status.remoteActive);
+   log.gauge("likelyTotal", status.likelyTotal);
 
     setTimeout(monitor, DELAY);
 
