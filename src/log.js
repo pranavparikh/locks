@@ -44,7 +44,7 @@ var gauge = function(metricName, value, tags) {
 };
 
 var increment = function(metricName, value, tags) {
-  sendStats("increment", metricName, value, tags);
+  // sendStats("increment", metricName, value, tags);
 };
 
 module.exports = {
