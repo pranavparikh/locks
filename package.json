@@ -26,7 +26,7 @@
     "lodash": "^4.6.1",
     "marge": "^1.0.1",
     "hot-shots": "^4.3.0",
-    "request": "^2.63.0"
+    "request": "^2.80.0"
   },
   "license": "MIT",
   "bugs": {
