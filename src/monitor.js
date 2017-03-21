@@ -3,11 +3,7 @@ var provider = require("./providers/" + currentProvider);
 var log = require("./log");
 var _ = require("lodash");
 
-var lastRemoteClaims = undefined;
-var claims = [];
-var concurrency = undefined;
-var status;
-var history = [];
+
 
 var HISTORY_MAX = 100;
 
@@ -17,6 +13,13 @@ var ERROR_DELAY = 10000;
 // Expire claims after 30 seconds, assuming we don't learn about external
 // release of claim in that time window.
 var EXPIRY_TIME = 1000 * 30;
+
+var lastRemoteClaims = undefined;
+var claims = [];
+var concurrency = undefined;
+var status;
+var localClaimsExpiry = EXPIRY_TIME;
+var history = [];
 
 var getTotalClaims = function () {
   return lastRemoteClaims + claims.length;
@@ -51,7 +54,7 @@ var releaseVM = function (token) {
 var expireClaims = function () {
   var now = Date.now();
   claims = claims.filter(function (claim) {
-    if (now - claim.timestamp > EXPIRY_TIME) {
+    if (now - claim.timestamp > localClaimsExpiry) {
       console.log("Releasing claim (expired): token " + claim.token);
       return false;
     }
@@ -90,26 +93,17 @@ var monitor = function () {
       remoteMax: concurrency,
       remoteQueued: data.queued,
       remoteActive: data.active,
-      likelyTotal: (claims.length + data.claimed)
-    };
-
-    var ev = {
-      localClaims: status.localClaims,
-      remoteActual: status.remoteActual,
-      remoteMax: status.remoteMax,
-      remoteQueued: status.remoteQueued,
-      remoteActive: status.remoteActive,
-      likelyTotal: status.likelyTotal
+      likelyTotal: (claims.length + data.claimed),
+      localClaimsExpiry: localClaimsExpiry
     };
 
     if (data.teams) {
-      _.each(data.teams, function(val, key) {
-        console.log("account." + key + " : " + val);
-        ev["account." + key] = val;
+      _.each(data.teams, function (val, key) {
+        console.log("activeByAccount" + key + " : " + val);
+        log.gauge("activeByAccount", val, ["account:" + key])
       });
     }
 
-    log.gauge(ev);
     history.push(status);
 
     if (history.length > HISTORY_MAX) {
@@ -122,6 +116,13 @@ var monitor = function () {
 
     console.log("   Remote Actual: " + data.claimed + " / " + concurrency);
     console.log("    Likely total: " + (claims.length + data.claimed) + " / " + concurrency);
+
+   log.gauge("localClaims", status.localClaims);
+   log.gauge("remoteActual", status.remoteActual);
+   log.gauge("remoteMax", status.remoteMax);
+   log.gauge("remoteQueued", status.remoteQueued);
+   log.gauge("remoteActive", status.remoteActive);
+   log.gauge("likelyTotal", status.likelyTotal);
 
     setTimeout(monitor, DELAY);
 
@@ -161,5 +162,14 @@ module.exports = {
   },
   getHistory: function () {
     return history;
+  },
+  setClaimTimeout: function (timeout) {
+    
+    if (_.isInteger(_.toNumber(timeout))) {
+      localClaimsExpiry = _.toNumber(timeout);
+      console.log("localClaims expiry has been successfully set to", timeout, "ms");
+    } else {
+      console.log("timeout needs to be an integer");
+    }
   }
 };

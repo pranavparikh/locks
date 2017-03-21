@@ -2,7 +2,7 @@ var request = require("request");
 var argv = require("marge").argv;
 var path = require("path");
 var fs = require("fs");
-var StatsD = require('node-statsd');
+const SDC = require("hot-shots");
 var _ = require("lodash");
 
 var host = process.env.LOCKS_STATSD_URL;
@@ -16,6 +16,7 @@ if (host) {
 }
 
 var options = {
+  telegraf: true,   
   host: host,
   port: port,
   prefix: prefix
@@ -23,34 +24,27 @@ var options = {
 
 var client;
 
+var counts = {};
+
 var init = function () {
 
   if (host) {
-    client = new StatsD(options);
+    client = new SDC(options);
   }
 };
 
-var sendStats = function (type, ev, namespace) {
-  if (client) {
-    _.each(ev, function (value, key) {
-      // send metrics to statsd over UDP.  no error handling by design.
-      // https://codeascraft.com/2011/02/15/measure-anything-measure-everything/
-      // (see the `Why UDP?` section)
-      if (namespace) {
-        key = namespace + "." + key;
-      }
-      console.log("[" + type + "] " + key + " : " + value);
-      client[type](key, value);
-    });
-  }
+var sendStats = function (type, metricName, value, tags) {
+  var tagStr = tags ? JSON.stringify(tags) : "";
+  console.log("[" + type + "] " + metricName + " : " + value + " " + tagStr);
+  client[type](metricName, value, tags);
 };
 
-var gauge = function(ev, namespace) {
-  sendStats("gauge", ev, namespace);
+var gauge = function(metricName, value, tags) {
+  sendStats("gauge", metricName, value, tags);
 };
 
-var increment = function(ev, namespace) {
-  sendStats("increment", ev, namespace);
+var increment = function(metricName, value, tags) {
+  // sendStats("increment", metricName, value, tags);
 };
 
 module.exports = {
