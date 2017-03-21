@@ -8,3 +8,17 @@ Coming soon:
   * Remote API + installation instructions.
   * Prioritization ("skip the line")
   * Automatic worker count suggestions
+
+## Using Docker
+
+```
+# docker build . -t testarmada/locks
+
+# docker run -e SAUCE_ACCESS_KEY='YOUR_KEY' \
+-e SAUCE_USERNAME='YOUR_USER' \
+--restart=always \
+--publish=4765:4765 \
+--detach=true \
+--name=locks \
+-d testarmada/locks
+```
