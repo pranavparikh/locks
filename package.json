@@ -23,10 +23,10 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
-    "lodash": "^4.6.1",
-    "marge": "^1.0.1",
     "hot-shots": "^4.3.0",
-    "request": "^2.63.0"
+    "lodash": "^4.6.1",
+    "request": "^2.63.0",
+    "ws": "^2.2.3"
   },
   "license": "MIT",
   "bugs": {
