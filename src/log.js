@@ -1,5 +1,4 @@
 var request = require("request");
-var argv = require("marge").argv;
 var path = require("path");
 var fs = require("fs");
 const SDC = require("hot-shots");
@@ -34,9 +33,11 @@ var init = function () {
 };
 
 var sendStats = function (type, metricName, value, tags) {
-  var tagStr = tags ? JSON.stringify(tags) : "";
-  console.log("[" + type + "] " + metricName + " : " + value + " " + tagStr);
-  client[type](metricName, value, tags);
+  if (client) {
+    var tagStr = tags ? JSON.stringify(tags) : "";
+    console.log("[" + type + "] " + metricName + " : " + value + " " + tagStr);
+    client[type](metricName, value, tags);
+  }
 };
 
 var gauge = function(metricName, value, tags) {
