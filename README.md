@@ -31,6 +31,7 @@ forever start /path/to/locks/src/server.js
 --detach=true \
 --name=locks \
 -d testarmada/locks
+```
 
 ## Websocket API
 
