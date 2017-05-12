@@ -4,6 +4,16 @@ Locks is a virtual machine traffic control service for SauceLabs users.
 
 It ensures a test is never waiting to acquire a virtual machine. This allows orchestration software to avoid killing tests early for reasons unrelated to failure (i.e. a test should never be punished for running too long if it was merely waiting for a VM to become available).
 
+## Installing
+
+The preferred method for installing `locks` is as a global module:
+
+```
+npm install -g testarmada-locks
+```
+
+## Running
+
 ```
 export SAUCE_ACCESS_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 export SAUCE_USERNAME='xxxxxxxxxxxx'
@@ -15,11 +25,12 @@ export LOCKS_STATSD_PREFIX=locks
 # optionally configure locks' listener port (default 4765)
 export LOCKS_PORT=4567
 
-forever start /path/to/locks/src/server.js
+locks
 ```
 
+## Running with Docker
 
-## Using Docker
+Check out our Dockerfile [here](./Dockerfile)
 
 ```
 # docker build . -t testarmada/locks
@@ -34,6 +45,8 @@ forever start /path/to/locks/src/server.js
 ```
 
 ## Websocket API
+
+To communicate with `locks`, open a websocket to your locks URL and use the claim and release API, outlined below:
 
 ### Claiming VMs
 
