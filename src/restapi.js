@@ -1,4 +1,5 @@
 var log = require("./log");
+var packagejson = require('../package.json');
 
 module.exports = function (app, monitor) {
 
@@ -46,6 +47,10 @@ module.exports = function (app, monitor) {
 
   app.get("/history", function (req, res) {
     res.send(monitor.getHistory());
+  });
+
+  app.get("/version", function (req, res) {
+    res.send(packagejson.version)
   });
 
 };
