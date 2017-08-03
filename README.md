@@ -87,3 +87,13 @@ To more accurately track VM supply, your client can send a courtesy message info
   "token": <string>
 }
 ```
+
+### Proxy Configuration
+
+To use a proxy to reach Saucelabs when querying the Saucelabs API, `locks` checks the presence of an environment variable called `SAUCE_OUTBOUND_PROXY` in the sauce provider.
+
+```
+$ export SAUCE_OUTBOUND_PROXY=http://your-internal-proxy-host:8080
+$ locks
+```
+
