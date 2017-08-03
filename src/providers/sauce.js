@@ -4,7 +4,10 @@ var _ = require("lodash");
 var initialized = false;
 
 if (process.env.SAUCE_OUTBOUND_PROXY) {
-  request = request.defaults(process.env.SAUCE_OUTBOUND_PROXY);
+  request = request.defaults({
+    strictSSL: false,
+    proxy: process.env.SAUCE_OUTBOUND_PROXY
+  });
 }
 
 var settings = {
