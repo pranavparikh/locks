@@ -24,7 +24,7 @@
     }
   ],
   "dependencies": {
-    "body-parser": "^1.14.1",
+    "body-parser": "^1.18.1",
     "express": "^4.13.3",
     "hot-shots": "^4.3.0",
     "lodash": "^4.6.1",
